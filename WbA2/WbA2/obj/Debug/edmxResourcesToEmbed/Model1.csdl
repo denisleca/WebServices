@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DenisModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="carti">
+    <Key>
+      <PropertyRef Name="id_carte" />
+    </Key>
+    <Property Name="id_carte" Type="String" MaxLength="13" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="titlu" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="autor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="pret" Type="Double" />
+    <NavigationProperty Name="carti_comandate" Relationship="Self.FK__carti_com__id_ca__37A5467C" FromRole="carti" ToRole="carti_comandate" />
+  </EntityType>
+  <EntityType Name="carti_comandate">
+    <Key>
+      <PropertyRef Name="id_comanda" />
+      <PropertyRef Name="id_carte" />
+    </Key>
+    <Property Name="id_comanda" Type="Int32" Nullable="false" />
+    <Property Name="id_carte" Type="String" MaxLength="13" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="cantitate" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="carti" Relationship="Self.FK__carti_com__id_ca__37A5467C" FromRole="carti_comandate" ToRole="carti" />
+    <NavigationProperty Name="comenzi" Relationship="Self.FK__carti_com__id_co__38996AB5" FromRole="carti_comandate" ToRole="comenzi" />
+  </EntityType>
+  <EntityType Name="clienti">
+    <Key>
+      <PropertyRef Name="cnp" />
+    </Key>
+    <Property Name="cnp" Type="String" MaxLength="13" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="nume" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="oras" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="tel" Type="String" MaxLength="13" FixedLength="true" Unicode="false" />
+    <Property Name="data_inreg" Type="DateTime" Precision="0" />
+    <NavigationProperty Name="comenzis" Relationship="Self.FK__comenzi__cnp__31EC6D26" FromRole="clienti" ToRole="comenzi" />
+  </EntityType>
+  <EntityType Name="comenzi">
+    <Key>
+      <PropertyRef Name="id_comanda" />
+    </Key>
+    <Property Name="id_comanda" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="cnp" Type="String" MaxLength="13" FixedLength="true" Unicode="false" />
+    <Property Name="valoare" Type="Double" />
+    <Property Name="data" Type="DateTime" Precision="0" />
+    <NavigationProperty Name="carti_comandate" Relationship="Self.FK__carti_com__id_co__38996AB5" FromRole="comenzi" ToRole="carti_comandate" />
+    <NavigationProperty Name="clienti" Relationship="Self.FK__comenzi__cnp__31EC6D26" FromRole="comenzi" ToRole="clienti" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK__carti_com__id_ca__37A5467C">
+    <End Role="carti" Type="Self.carti" Multiplicity="1" />
+    <End Role="carti_comandate" Type="Self.carti_comandate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="carti">
+        <PropertyRef Name="id_carte" />
+      </Principal>
+      <Dependent Role="carti_comandate">
+        <PropertyRef Name="id_carte" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__carti_com__id_co__38996AB5">
+    <End Role="comenzi" Type="Self.comenzi" Multiplicity="1" />
+    <End Role="carti_comandate" Type="Self.carti_comandate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="comenzi">
+        <PropertyRef Name="id_comanda" />
+      </Principal>
+      <Dependent Role="carti_comandate">
+        <PropertyRef Name="id_comanda" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__comenzi__cnp__31EC6D26">
+    <End Role="clienti" Type="Self.clienti" Multiplicity="0..1" />
+    <End Role="comenzi" Type="Self.comenzi" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="clienti">
+        <PropertyRef Name="cnp" />
+      </Principal>
+      <Dependent Role="comenzi">
+        <PropertyRef Name="cnp" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DenisEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="cartis" EntityType="Self.carti" />
+    <EntitySet Name="carti_comandate" EntityType="Self.carti_comandate" />
+    <EntitySet Name="clientis" EntityType="Self.clienti" />
+    <EntitySet Name="comenzis" EntityType="Self.comenzi" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <AssociationSet Name="FK__carti_com__id_ca__37A5467C" Association="Self.FK__carti_com__id_ca__37A5467C">
+      <End Role="carti" EntitySet="cartis" />
+      <End Role="carti_comandate" EntitySet="carti_comandate" />
+    </AssociationSet>
+    <AssociationSet Name="FK__carti_com__id_co__38996AB5" Association="Self.FK__carti_com__id_co__38996AB5">
+      <End Role="comenzi" EntitySet="comenzis" />
+      <End Role="carti_comandate" EntitySet="carti_comandate" />
+    </AssociationSet>
+    <AssociationSet Name="FK__comenzi__cnp__31EC6D26" Association="Self.FK__comenzi__cnp__31EC6D26">
+      <End Role="clienti" EntitySet="clientis" />
+      <End Role="comenzi" EntitySet="comenzis" />
+    </AssociationSet>
+    <FunctionImport Name="InsertCarte">
+      <Parameter Name="id_carte" Mode="In" Type="String" />
+      <Parameter Name="titlu" Mode="In" Type="String" />
+      <Parameter Name="autor" Mode="In" Type="String" />
+      <Parameter Name="pret" Mode="In" Type="Double" />
+    </FunctionImport>
+    <FunctionImport Name="InsertCarteComandata">
+      <Parameter Name="id_comanda" Mode="In" Type="Int32" />
+      <Parameter Name="id_carte" Mode="In" Type="String" />
+      <Parameter Name="cantitate" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="InsertClient">
+      <Parameter Name="cnp" Mode="In" Type="String" />
+      <Parameter Name="nume" Mode="In" Type="String" />
+      <Parameter Name="oras" Mode="In" Type="String" />
+      <Parameter Name="tel" Mode="In" Type="String" />
+      <Parameter Name="data_inreg" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="InsertComanda">
+      <Parameter Name="id_comanda" Mode="In" Type="Int32" />
+      <Parameter Name="cnp" Mode="In" Type="String" />
+      <Parameter Name="valoare" Mode="In" Type="Double" />
+      <Parameter Name="data" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="StergeCarte">
+      <Parameter Name="id_carte" Mode="In" Type="Int32" />
+      <Parameter Name="titlu" Mode="In" Type="String" />
+      <Parameter Name="autor" Mode="In" Type="String" />
+      <Parameter Name="pret" Mode="In" Type="Double" />
+    </FunctionImport>
+    <FunctionImport Name="StergeCartiComandate">
+      <Parameter Name="id_comanda" Mode="In" Type="Int32" />
+      <Parameter Name="id_carte" Mode="In" Type="String" />
+      <Parameter Name="cantitate" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="StergeClient">
+      <Parameter Name="cnp" Mode="In" Type="String" />
+      <Parameter Name="nume" Mode="In" Type="String" />
+      <Parameter Name="oras" Mode="In" Type="String" />
+      <Parameter Name="tel" Mode="In" Type="String" />
+      <Parameter Name="data_inreg" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="StergeComenzi">
+      <Parameter Name="id_comanda" Mode="In" Type="Int32" />
+      <Parameter Name="cnp" Mode="In" Type="String" />
+      <Parameter Name="valoare" Mode="In" Type="Double" />
+      <Parameter Name="data" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="UpdateCarte">
+      <Parameter Name="id_carte" Mode="In" Type="Int32" />
+      <Parameter Name="titlu" Mode="In" Type="String" />
+      <Parameter Name="autor" Mode="In" Type="String" />
+      <Parameter Name="pret" Mode="In" Type="Double" />
+    </FunctionImport>
+    <FunctionImport Name="UpdateCartiComandate">
+      <Parameter Name="id_comanda" Mode="In" Type="Int32" />
+      <Parameter Name="id_carte" Mode="In" Type="String" />
+      <Parameter Name="cantitate" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="UpdateClient">
+      <Parameter Name="cnp" Mode="In" Type="String" />
+      <Parameter Name="nume" Mode="In" Type="String" />
+      <Parameter Name="oras" Mode="In" Type="String" />
+      <Parameter Name="tel" Mode="In" Type="String" />
+      <Parameter Name="data_inreg" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="UpdateComanda">
+      <Parameter Name="id_comanda" Mode="In" Type="Int32" />
+      <Parameter Name="cnp" Mode="In" Type="String" />
+      <Parameter Name="valoare" Mode="In" Type="Double" />
+      <Parameter Name="data" Mode="In" Type="DateTime" />
+    </FunctionImport>
+  </EntityContainer>
+</Schema>

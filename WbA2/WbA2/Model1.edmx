@@ -1,0 +1,459 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DenisModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="carti">
+          <Key>
+            <PropertyRef Name="id_carte" />
+          </Key>
+          <Property Name="id_carte" Type="char" MaxLength="13" Nullable="false" />
+          <Property Name="titlu" Type="varchar" MaxLength="20" />
+          <Property Name="autor" Type="varchar" MaxLength="20" />
+          <Property Name="pret" Type="float" />
+        </EntityType>
+        <EntityType Name="carti_comandate">
+          <Key>
+            <PropertyRef Name="id_comanda" />
+            <PropertyRef Name="id_carte" />
+          </Key>
+          <Property Name="id_comanda" Type="int" Nullable="false" />
+          <Property Name="id_carte" Type="char" MaxLength="13" Nullable="false" />
+          <Property Name="cantitate" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="clienti">
+          <Key>
+            <PropertyRef Name="cnp" />
+          </Key>
+          <Property Name="cnp" Type="char" MaxLength="13" Nullable="false" />
+          <Property Name="nume" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="oras" Type="varchar" MaxLength="20" />
+          <Property Name="tel" Type="char" MaxLength="13" />
+          <Property Name="data_inreg" Type="date" />
+        </EntityType>
+        <EntityType Name="comenzi">
+          <Key>
+            <PropertyRef Name="id_comanda" />
+          </Key>
+          <Property Name="id_comanda" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="cnp" Type="char" MaxLength="13" />
+          <Property Name="valoare" Type="float" />
+          <Property Name="data" Type="date" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK__carti_com__id_ca__37A5467C">
+          <End Role="carti" Type="Self.carti" Multiplicity="1" />
+          <End Role="carti_comandate" Type="Self.carti_comandate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="carti">
+              <PropertyRef Name="id_carte" />
+            </Principal>
+            <Dependent Role="carti_comandate">
+              <PropertyRef Name="id_carte" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__carti_com__id_co__38996AB5">
+          <End Role="comenzi" Type="Self.comenzi" Multiplicity="1" />
+          <End Role="carti_comandate" Type="Self.carti_comandate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="comenzi">
+              <PropertyRef Name="id_comanda" />
+            </Principal>
+            <Dependent Role="carti_comandate">
+              <PropertyRef Name="id_comanda" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__comenzi__cnp__31EC6D26">
+          <End Role="clienti" Type="Self.clienti" Multiplicity="0..1" />
+          <End Role="comenzi" Type="Self.comenzi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="clienti">
+              <PropertyRef Name="cnp" />
+            </Principal>
+            <Dependent Role="comenzi">
+              <PropertyRef Name="cnp" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="InsertCarte" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_carte" Type="char" Mode="In" />
+          <Parameter Name="titlu" Type="varchar" Mode="In" />
+          <Parameter Name="autor" Type="varchar" Mode="In" />
+          <Parameter Name="pret" Type="float" Mode="In" />
+        </Function>
+        <Function Name="InsertCarteComandata" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_comanda" Type="int" Mode="In" />
+          <Parameter Name="id_carte" Type="char" Mode="In" />
+          <Parameter Name="cantitate" Type="int" Mode="In" />
+        </Function>
+        <Function Name="InsertClient" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="cnp" Type="char" Mode="In" />
+          <Parameter Name="nume" Type="varchar" Mode="In" />
+          <Parameter Name="oras" Type="varchar" Mode="In" />
+          <Parameter Name="tel" Type="char" Mode="In" />
+          <Parameter Name="data_inreg" Type="date" Mode="In" />
+        </Function>
+        <Function Name="InsertComanda" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_comanda" Type="int" Mode="In" />
+          <Parameter Name="cnp" Type="char" Mode="In" />
+          <Parameter Name="valoare" Type="float" Mode="In" />
+          <Parameter Name="data" Type="date" Mode="In" />
+        </Function>
+        <Function Name="StergeCarte" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_carte" Type="int" Mode="In" />
+          <Parameter Name="titlu" Type="varchar" Mode="In" />
+          <Parameter Name="autor" Type="varchar" Mode="In" />
+          <Parameter Name="pret" Type="float" Mode="In" />
+        </Function>
+        <Function Name="StergeCartiComandate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_comanda" Type="int" Mode="In" />
+          <Parameter Name="id_carte" Type="char" Mode="In" />
+          <Parameter Name="cantitate" Type="int" Mode="In" />
+        </Function>
+        <Function Name="StergeClient" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="cnp" Type="char" Mode="In" />
+          <Parameter Name="nume" Type="varchar" Mode="In" />
+          <Parameter Name="oras" Type="varchar" Mode="In" />
+          <Parameter Name="tel" Type="char" Mode="In" />
+          <Parameter Name="data_inreg" Type="date" Mode="In" />
+        </Function>
+        <Function Name="StergeComenzi" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_comanda" Type="int" Mode="In" />
+          <Parameter Name="cnp" Type="char" Mode="In" />
+          <Parameter Name="valoare" Type="float" Mode="In" />
+          <Parameter Name="data" Type="date" Mode="In" />
+        </Function>
+        <Function Name="UpdateCarte" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_carte" Type="int" Mode="In" />
+          <Parameter Name="titlu" Type="varchar" Mode="In" />
+          <Parameter Name="autor" Type="varchar" Mode="In" />
+          <Parameter Name="pret" Type="float" Mode="In" />
+        </Function>
+        <Function Name="UpdateCartiComandate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_comanda" Type="int" Mode="In" />
+          <Parameter Name="id_carte" Type="char" Mode="In" />
+          <Parameter Name="cantitate" Type="int" Mode="In" />
+        </Function>
+        <Function Name="UpdateClient" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="cnp" Type="char" Mode="In" />
+          <Parameter Name="nume" Type="varchar" Mode="In" />
+          <Parameter Name="oras" Type="varchar" Mode="In" />
+          <Parameter Name="tel" Type="char" Mode="In" />
+          <Parameter Name="data_inreg" Type="date" Mode="In" />
+        </Function>
+        <Function Name="UpdateComanda" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_comanda" Type="int" Mode="In" />
+          <Parameter Name="cnp" Type="char" Mode="In" />
+          <Parameter Name="valoare" Type="float" Mode="In" />
+          <Parameter Name="data" Type="date" Mode="In" />
+        </Function>
+        <EntityContainer Name="DenisModelStoreContainer">
+          <EntitySet Name="carti" EntityType="Self.carti" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="carti_comandate" EntityType="Self.carti_comandate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="clienti" EntityType="Self.clienti" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="comenzi" EntityType="Self.comenzi" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__carti_com__id_ca__37A5467C" Association="Self.FK__carti_com__id_ca__37A5467C">
+            <End Role="carti" EntitySet="carti" />
+            <End Role="carti_comandate" EntitySet="carti_comandate" />
+          </AssociationSet>
+          <AssociationSet Name="FK__carti_com__id_co__38996AB5" Association="Self.FK__carti_com__id_co__38996AB5">
+            <End Role="comenzi" EntitySet="comenzi" />
+            <End Role="carti_comandate" EntitySet="carti_comandate" />
+          </AssociationSet>
+          <AssociationSet Name="FK__comenzi__cnp__31EC6D26" Association="Self.FK__comenzi__cnp__31EC6D26">
+            <End Role="clienti" EntitySet="clienti" />
+            <End Role="comenzi" EntitySet="comenzi" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DenisModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="carti">
+          <Key>
+            <PropertyRef Name="id_carte" />
+          </Key>
+          <Property Name="id_carte" Type="String" MaxLength="13" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="titlu" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="autor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="pret" Type="Double" />
+          <NavigationProperty Name="carti_comandate" Relationship="Self.FK__carti_com__id_ca__37A5467C" FromRole="carti" ToRole="carti_comandate" />
+        </EntityType>
+        <EntityType Name="carti_comandate">
+          <Key>
+            <PropertyRef Name="id_comanda" />
+            <PropertyRef Name="id_carte" />
+          </Key>
+          <Property Name="id_comanda" Type="Int32" Nullable="false" />
+          <Property Name="id_carte" Type="String" MaxLength="13" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="cantitate" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="carti" Relationship="Self.FK__carti_com__id_ca__37A5467C" FromRole="carti_comandate" ToRole="carti" />
+          <NavigationProperty Name="comenzi" Relationship="Self.FK__carti_com__id_co__38996AB5" FromRole="carti_comandate" ToRole="comenzi" />
+        </EntityType>
+        <EntityType Name="clienti">
+          <Key>
+            <PropertyRef Name="cnp" />
+          </Key>
+          <Property Name="cnp" Type="String" MaxLength="13" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="nume" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="oras" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="tel" Type="String" MaxLength="13" FixedLength="true" Unicode="false" />
+          <Property Name="data_inreg" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="comenzis" Relationship="Self.FK__comenzi__cnp__31EC6D26" FromRole="clienti" ToRole="comenzi" />
+        </EntityType>
+        <EntityType Name="comenzi">
+          <Key>
+            <PropertyRef Name="id_comanda" />
+          </Key>
+          <Property Name="id_comanda" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="cnp" Type="String" MaxLength="13" FixedLength="true" Unicode="false" />
+          <Property Name="valoare" Type="Double" />
+          <Property Name="data" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="carti_comandate" Relationship="Self.FK__carti_com__id_co__38996AB5" FromRole="comenzi" ToRole="carti_comandate" />
+          <NavigationProperty Name="clienti" Relationship="Self.FK__comenzi__cnp__31EC6D26" FromRole="comenzi" ToRole="clienti" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK__carti_com__id_ca__37A5467C">
+          <End Role="carti" Type="Self.carti" Multiplicity="1" />
+          <End Role="carti_comandate" Type="Self.carti_comandate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="carti">
+              <PropertyRef Name="id_carte" />
+            </Principal>
+            <Dependent Role="carti_comandate">
+              <PropertyRef Name="id_carte" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__carti_com__id_co__38996AB5">
+          <End Role="comenzi" Type="Self.comenzi" Multiplicity="1" />
+          <End Role="carti_comandate" Type="Self.carti_comandate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="comenzi">
+              <PropertyRef Name="id_comanda" />
+            </Principal>
+            <Dependent Role="carti_comandate">
+              <PropertyRef Name="id_comanda" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__comenzi__cnp__31EC6D26">
+          <End Role="clienti" Type="Self.clienti" Multiplicity="0..1" />
+          <End Role="comenzi" Type="Self.comenzi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="clienti">
+              <PropertyRef Name="cnp" />
+            </Principal>
+            <Dependent Role="comenzi">
+              <PropertyRef Name="cnp" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DenisEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="cartis" EntityType="Self.carti" />
+          <EntitySet Name="carti_comandate" EntityType="Self.carti_comandate" />
+          <EntitySet Name="clientis" EntityType="Self.clienti" />
+          <EntitySet Name="comenzis" EntityType="Self.comenzi" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <AssociationSet Name="FK__carti_com__id_ca__37A5467C" Association="Self.FK__carti_com__id_ca__37A5467C">
+            <End Role="carti" EntitySet="cartis" />
+            <End Role="carti_comandate" EntitySet="carti_comandate" />
+          </AssociationSet>
+          <AssociationSet Name="FK__carti_com__id_co__38996AB5" Association="Self.FK__carti_com__id_co__38996AB5">
+            <End Role="comenzi" EntitySet="comenzis" />
+            <End Role="carti_comandate" EntitySet="carti_comandate" />
+          </AssociationSet>
+          <AssociationSet Name="FK__comenzi__cnp__31EC6D26" Association="Self.FK__comenzi__cnp__31EC6D26">
+            <End Role="clienti" EntitySet="clientis" />
+            <End Role="comenzi" EntitySet="comenzis" />
+          </AssociationSet>
+          <FunctionImport Name="InsertCarte">
+            <Parameter Name="id_carte" Mode="In" Type="String" />
+            <Parameter Name="titlu" Mode="In" Type="String" />
+            <Parameter Name="autor" Mode="In" Type="String" />
+            <Parameter Name="pret" Mode="In" Type="Double" />
+          </FunctionImport>
+          <FunctionImport Name="InsertCarteComandata">
+            <Parameter Name="id_comanda" Mode="In" Type="Int32" />
+            <Parameter Name="id_carte" Mode="In" Type="String" />
+            <Parameter Name="cantitate" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="InsertClient">
+            <Parameter Name="cnp" Mode="In" Type="String" />
+            <Parameter Name="nume" Mode="In" Type="String" />
+            <Parameter Name="oras" Mode="In" Type="String" />
+            <Parameter Name="tel" Mode="In" Type="String" />
+            <Parameter Name="data_inreg" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="InsertComanda">
+            <Parameter Name="id_comanda" Mode="In" Type="Int32" />
+            <Parameter Name="cnp" Mode="In" Type="String" />
+            <Parameter Name="valoare" Mode="In" Type="Double" />
+            <Parameter Name="data" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="StergeCarte">
+            <Parameter Name="id_carte" Mode="In" Type="Int32" />
+            <Parameter Name="titlu" Mode="In" Type="String" />
+            <Parameter Name="autor" Mode="In" Type="String" />
+            <Parameter Name="pret" Mode="In" Type="Double" />
+          </FunctionImport>
+          <FunctionImport Name="StergeCartiComandate">
+            <Parameter Name="id_comanda" Mode="In" Type="Int32" />
+            <Parameter Name="id_carte" Mode="In" Type="String" />
+            <Parameter Name="cantitate" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="StergeClient">
+            <Parameter Name="cnp" Mode="In" Type="String" />
+            <Parameter Name="nume" Mode="In" Type="String" />
+            <Parameter Name="oras" Mode="In" Type="String" />
+            <Parameter Name="tel" Mode="In" Type="String" />
+            <Parameter Name="data_inreg" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="StergeComenzi">
+            <Parameter Name="id_comanda" Mode="In" Type="Int32" />
+            <Parameter Name="cnp" Mode="In" Type="String" />
+            <Parameter Name="valoare" Mode="In" Type="Double" />
+            <Parameter Name="data" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateCarte">
+            <Parameter Name="id_carte" Mode="In" Type="Int32" />
+            <Parameter Name="titlu" Mode="In" Type="String" />
+            <Parameter Name="autor" Mode="In" Type="String" />
+            <Parameter Name="pret" Mode="In" Type="Double" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateCartiComandate">
+            <Parameter Name="id_comanda" Mode="In" Type="Int32" />
+            <Parameter Name="id_carte" Mode="In" Type="String" />
+            <Parameter Name="cantitate" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateClient">
+            <Parameter Name="cnp" Mode="In" Type="String" />
+            <Parameter Name="nume" Mode="In" Type="String" />
+            <Parameter Name="oras" Mode="In" Type="String" />
+            <Parameter Name="tel" Mode="In" Type="String" />
+            <Parameter Name="data_inreg" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateComanda">
+            <Parameter Name="id_comanda" Mode="In" Type="Int32" />
+            <Parameter Name="cnp" Mode="In" Type="String" />
+            <Parameter Name="valoare" Mode="In" Type="Double" />
+            <Parameter Name="data" Mode="In" Type="DateTime" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DenisModelStoreContainer" CdmEntityContainer="DenisEntities">
+          <EntitySetMapping Name="cartis">
+            <EntityTypeMapping TypeName="DenisModel.carti">
+              <MappingFragment StoreEntitySet="carti">
+                <ScalarProperty Name="id_carte" ColumnName="id_carte" />
+                <ScalarProperty Name="titlu" ColumnName="titlu" />
+                <ScalarProperty Name="autor" ColumnName="autor" />
+                <ScalarProperty Name="pret" ColumnName="pret" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="carti_comandate">
+            <EntityTypeMapping TypeName="DenisModel.carti_comandate">
+              <MappingFragment StoreEntitySet="carti_comandate">
+                <ScalarProperty Name="id_comanda" ColumnName="id_comanda" />
+                <ScalarProperty Name="id_carte" ColumnName="id_carte" />
+                <ScalarProperty Name="cantitate" ColumnName="cantitate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="clientis">
+            <EntityTypeMapping TypeName="DenisModel.clienti">
+              <MappingFragment StoreEntitySet="clienti">
+                <ScalarProperty Name="cnp" ColumnName="cnp" />
+                <ScalarProperty Name="nume" ColumnName="nume" />
+                <ScalarProperty Name="oras" ColumnName="oras" />
+                <ScalarProperty Name="tel" ColumnName="tel" />
+                <ScalarProperty Name="data_inreg" ColumnName="data_inreg" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="comenzis">
+            <EntityTypeMapping TypeName="DenisModel.comenzi">
+              <MappingFragment StoreEntitySet="comenzi">
+                <ScalarProperty Name="id_comanda" ColumnName="id_comanda" />
+                <ScalarProperty Name="cnp" ColumnName="cnp" />
+                <ScalarProperty Name="valoare" ColumnName="valoare" />
+                <ScalarProperty Name="data" ColumnName="data" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="DenisModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="InsertCarte" FunctionName="DenisModel.Store.InsertCarte" />
+          <FunctionImportMapping FunctionImportName="InsertCarteComandata" FunctionName="DenisModel.Store.InsertCarteComandata" />
+          <FunctionImportMapping FunctionImportName="InsertClient" FunctionName="DenisModel.Store.InsertClient" />
+          <FunctionImportMapping FunctionImportName="InsertComanda" FunctionName="DenisModel.Store.InsertComanda" />
+          <FunctionImportMapping FunctionImportName="StergeCarte" FunctionName="DenisModel.Store.StergeCarte" />
+          <FunctionImportMapping FunctionImportName="StergeCartiComandate" FunctionName="DenisModel.Store.StergeCartiComandate" />
+          <FunctionImportMapping FunctionImportName="StergeClient" FunctionName="DenisModel.Store.StergeClient" />
+          <FunctionImportMapping FunctionImportName="StergeComenzi" FunctionName="DenisModel.Store.StergeComenzi" />
+          <FunctionImportMapping FunctionImportName="UpdateCarte" FunctionName="DenisModel.Store.UpdateCarte" />
+          <FunctionImportMapping FunctionImportName="UpdateCartiComandate" FunctionName="DenisModel.Store.UpdateCartiComandate" />
+          <FunctionImportMapping FunctionImportName="UpdateClient" FunctionName="DenisModel.Store.UpdateClient" />
+          <FunctionImportMapping FunctionImportName="UpdateComanda" FunctionName="DenisModel.Store.UpdateComanda" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
